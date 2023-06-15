@@ -18,9 +18,9 @@ package uk.gov.hmrc.perftests.example.config
 
 import uk.gov.hmrc.performance.conf.Configuration
 
-trait ApiHubTestsConfiguration extends Configuration {
+trait ApiHubTestingConfiguration extends Configuration {
 
-  def apiHubTestingConfig(): ApiHubTestingConfig = {
+  def loadConfig(): ApiHubTestingConfig = {
     val appId = readRequiredProperty(s"testing.applications.appId")
     val ldapEmail = readRequiredProperty(s"testing.ldapLogin.email")
     val apiHubBaseUrl: String = baseUrlFor("api-hub-applications")

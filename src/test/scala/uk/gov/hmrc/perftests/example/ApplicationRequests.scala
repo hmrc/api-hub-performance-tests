@@ -19,33 +19,33 @@ package uk.gov.hmrc.perftests.example
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import uk.gov.hmrc.perftests.example.config.{ApiHubTestingConfig, ApiHubTestsConfiguration}
+import uk.gov.hmrc.perftests.example.config.{ApiHubTestingConfig, ApiHubTestingConfiguration}
 
-object ApplicationRequests extends ApiHubTestsConfiguration {
-  val testingConfig: ApiHubTestingConfig = apiHubTestingConfig()
-  val baseUrl: String = testingConfig.apiHubBaseUrl
+object ApplicationRequests extends ApiHubTestingConfiguration {
+  val testingConfig: ApiHubTestingConfig = loadConfig()
+  val apiHubBaseUrl: String = testingConfig.apiHubBaseUrl
   val ldapLoginUrl: String = testingConfig.ldapLogin.baseUrl
 
   val loginCredentials: Map[String, String] = Map(
-    "redirectUrl" -> baseUrl,
+    "redirectUrl" -> apiHubBaseUrl,
     "email" -> testingConfig.ldapLogin.email,
     "principal" -> "api-hub-performance-tests"
   )
 
   val navigateToLdapLoginPage: HttpRequestBuilder =
     http("GET test-only/sign-in")
-      .get(s"$ldapLoginUrl/test-only/sign-in?continue_url=$baseUrl")
+      .get(s"$ldapLoginUrl/test-only/sign-in?continue_url=$apiHubBaseUrl")
       .check(css("input[name=csrfToken]", "value").saveAs("csrfToken"))
       .check(status.is(200))
 
   val loginUsingLdap: HttpRequestBuilder =
     http("POST test-only/sign-in")
-      .post(s"$ldapLoginUrl/test-only/sign-in?continue_url=$baseUrl")
+      .post(s"$ldapLoginUrl/test-only/sign-in?continue_url=$apiHubBaseUrl")
       .formParamMap(loginCredentials ++ Map("csrfToken" -> s"$${csrfToken}"))
       .check(status.is(303))
 
   val getApplication: HttpRequestBuilder =
     http("GET application-details")
-      .get(s"$baseUrl/application-details/${testingConfig.appId}")
+      .get(s"$apiHubBaseUrl/application-details/${testingConfig.appId}")
       .check(status.is(200))
 }
