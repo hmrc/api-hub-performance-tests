@@ -19,30 +19,32 @@ package uk.gov.hmrc.perftests.example
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
-object ApplicationRequests extends ServicesConfiguration {
+object ApplicationRequests extends CustomServicesConfiguration with ApiHubTestsConfiguration {
+  val testingConfig: ApiHubTestingConfig = apiHubTestingConfig()
   val baseUrl: String = baseUrlFor("api-hub-applications")
-  val route: String = "/test-only/sign-in?continue_url=https%3A%2F%2Fadmin.qa.tax.service.gov.uk%2Fapi-hub"
-  val applicationId = "646e34e1225ba0552aa72707"
-  val applicationRoute = "/application-details"
+  val ldapLoginUrl: String = baseUrlFor("internal-auth-frontend")
 
-  val loginCredentials: Map[String, String] = Map("redirectUrl" -> "https://admin.qa.tax.service.gov.uk/api-hub", "email" -> "ade.oke@digital.hmrc.gov.uk", "principal" -> "ade-service")
+  val loginCredentials: Map[String, String] = Map(
+    "redirectUrl" -> baseUrl,
+    "email" -> testingConfig.ldapLogin.email,
+    "principal" -> "api-hub-performance-tests"
+  )
 
   val navigateToLoginPage: HttpRequestBuilder =
     http("Navigate to Api Hub Login Page")
-      .get("https://admin.staging.tax.service.gov.uk/api-hub/test-only/sign-in?continue_url=https%3A%2F%2Fadmin.qa.tax.service.gov.uk%2Fapi-hub")
+      .get(s"$ldapLoginUrl/test-only/sign-in?continue_url=$baseUrl")
       .check(css("input[name=csrfToken]", "value").saveAs("csrfToken"))
       .check(status.is(200))
 
   val loginOnLoginPage: HttpRequestBuilder =
     http("LDAP login")
-      .post("https://admin.staging.tax.service.gov.uk//api-hub/test-only/sign-in?continue_url=https%3A%2F%2Fadmin.qa.tax.service.gov.uk%2Fapi-hub")
+      .post(s"$ldapLoginUrl/test-only/sign-in?continue_url=$baseUrl")
       .formParamMap(loginCredentials ++ Map("csrfToken" -> s"$${csrfToken}"))
       .check(status.is(303))
 
   val getApplication: HttpRequestBuilder =
     http("get specific application details")
-      .get(s"https://admin.staging.tax.service.gov.uk/api-hub/application-details/$applicationId")
+      .get(s"$baseUrl/application-details/${testingConfig.appId}")
       .check(status.is(200))
 }
