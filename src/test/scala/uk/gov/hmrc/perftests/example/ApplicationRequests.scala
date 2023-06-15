@@ -19,6 +19,7 @@ package uk.gov.hmrc.perftests.example
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import uk.gov.hmrc.perftests.example.config.{ApiHubTestingConfig, ApiHubTestsConfiguration, CustomServicesConfiguration}
 
 object ApplicationRequests extends CustomServicesConfiguration with ApiHubTestsConfiguration {
   val testingConfig: ApiHubTestingConfig = apiHubTestingConfig()

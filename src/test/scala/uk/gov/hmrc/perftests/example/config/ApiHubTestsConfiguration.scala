@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.example
+package uk.gov.hmrc.perftests.example.config
 
 import uk.gov.hmrc.performance.conf.Configuration
-import uk.gov.hmrc.perftests.example.config.ConfigNotFoundException
-
-case class ApiHubTestingConfig(appId: String, ldapLogin: LdapLogin)
-case class LdapLogin(email: String)
 
 trait ApiHubTestsConfiguration extends Configuration {
 
@@ -43,7 +39,6 @@ trait ApiHubTestsConfiguration extends Configuration {
 
   def configIsDefined(appId: String, ldapEmail: String): Boolean =
     appId.nonEmpty && ldapEmail.nonEmpty
-
 
 
 }

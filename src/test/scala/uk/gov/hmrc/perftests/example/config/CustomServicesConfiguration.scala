@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.example
+package uk.gov.hmrc.perftests.example.config
 
 import uk.gov.hmrc.performance.conf.Configuration
-import uk.gov.hmrc.perftests.example.config.ConfigNotFoundException
 
 // copied from ServicesConfiguration but added a path config value
 trait CustomServicesConfiguration extends Configuration {
