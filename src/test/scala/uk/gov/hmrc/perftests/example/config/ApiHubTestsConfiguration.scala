@@ -21,24 +21,36 @@ import uk.gov.hmrc.performance.conf.Configuration
 trait ApiHubTestsConfiguration extends Configuration {
 
   def apiHubTestingConfig(): ApiHubTestingConfig = {
-    val appId = readProperty(s"testing.applications.appId", "")
-    val ldapEmail = readProperty(s"testing.ldapLogin.email", "")
+    val appId = readRequiredProperty(s"testing.applications.appId")
+    val ldapEmail = readRequiredProperty(s"testing.ldapLogin.email")
+    val apiHubBaseUrl: String = baseUrlFor("api-hub-applications")
+    val ldapLoginUrl: String = baseUrlFor("internal-auth-frontend")
 
-    if (configIsDefined(appId, ldapEmail)) {
+    ApiHubTestingConfig(apiHubBaseUrl, appId, LdapLogin(ldapLoginUrl, ldapEmail))
+  }
 
-      ApiHubTestingConfig(appId, LdapLogin(ldapEmail))
-    } else {
+  private def readRequiredProperty(property: String): String = {
+    val value = readProperty(property, "")
+    if (value.isEmpty) {
       val confFile =
         if (runLocal)
           "services-local.conf"
         else
           "services.conf"
-      throw ConfigNotFoundException(s"Missing api hub testing config in '$confFile'.")
-    }
+      throw ConfigNotFoundException(s"'$property' not defined in '$confFile'.")
+    } else value
+
   }
 
-  def configIsDefined(appId: String, ldapEmail: String): Boolean =
-    appId.nonEmpty && ldapEmail.nonEmpty
+  private def urlFor(protocol: String, host: String, port: String, path: String) =
+    if (port.toInt == 80 || port.toInt == 443) s"$protocol://$host/$path" else s"$protocol://$host:$port/$path"
 
+  private def baseUrlFor(serviceName: String): String = {
+    val protocol = readProperty(s"services.$serviceName.protocol", "http")
+    val host = readProperty(s"services.$serviceName.host", "localhost")
+    val port = readProperty(s"services.$serviceName.port", "80")
+    val path = readProperty(s"services.$serviceName.path", "")
 
+    urlFor(protocol, host, port, path)
+  }
 }

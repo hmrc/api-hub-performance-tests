@@ -19,12 +19,12 @@ package uk.gov.hmrc.perftests.example
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import uk.gov.hmrc.perftests.example.config.{ApiHubTestingConfig, ApiHubTestsConfiguration, CustomServicesConfiguration}
+import uk.gov.hmrc.perftests.example.config.{ApiHubTestingConfig, ApiHubTestsConfiguration}
 
-object ApplicationRequests extends CustomServicesConfiguration with ApiHubTestsConfiguration {
+object ApplicationRequests extends ApiHubTestsConfiguration {
   val testingConfig: ApiHubTestingConfig = apiHubTestingConfig()
-  val baseUrl: String = baseUrlFor("api-hub-applications")
-  val ldapLoginUrl: String = baseUrlFor("internal-auth-frontend")
+  val baseUrl: String = testingConfig.apiHubBaseUrl
+  val ldapLoginUrl: String = testingConfig.ldapLogin.baseUrl
 
   val loginCredentials: Map[String, String] = Map(
     "redirectUrl" -> baseUrl,

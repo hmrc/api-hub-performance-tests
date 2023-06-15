@@ -16,4 +16,6 @@
 
 package uk.gov.hmrc.perftests.example.config
 
-case class ApiHubTestingConfig(appId: String, ldapLogin: LdapLogin)
+case class ApiHubTestingConfig(apiHubBaseUrl: String, appId: String, ldapLogin: LdapLogin)
+
+case class LdapLogin(baseUrl: String, email: String)
