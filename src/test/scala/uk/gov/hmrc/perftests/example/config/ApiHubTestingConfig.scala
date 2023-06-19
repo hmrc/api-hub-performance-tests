@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.example
+package uk.gov.hmrc.perftests.example.config
 
-import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
-import uk.gov.hmrc.perftests.example.ApplicationRequests.{getApplication, loginUsingLdap}
+case class ApiHubTestingConfig(apiHubBaseUrl: String, appId: String, ldapLogin: LdapLogin)
 
-class ApplicationSimulation extends PerformanceTestRunner {
-
-  setup("login-using-ldap", "Login to LDAP") withRequests loginUsingLdap
-
-  setup("get-application-by-id", "Get application by id") withRequests getApplication
-
-  runSimulation()
-}
+case class LdapLogin(baseUrl: String, email: String)
