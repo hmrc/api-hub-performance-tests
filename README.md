@@ -3,7 +3,7 @@
 Performance test suite for The API Hub, using [performance-test-runner](https://github.com/hmrc/performance-test-runner) under the hood.
 
 ## Documentation
-See [The API Hub - Performance Test](https://confluence.tools.tax.service.gov.uk/display/AH/Performance+Testing) on Confluence for configuration details and test output analysis.
+See [Performance Test - The API Hub](https://confluence.tools.tax.service.gov.uk/display/AH/Performance+Testing+-+The+API+Hub) on Confluence for configuration details and test output analysis.
 
 ## Pre-requisites
 
