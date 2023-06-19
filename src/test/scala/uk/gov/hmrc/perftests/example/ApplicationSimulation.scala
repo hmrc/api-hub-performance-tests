@@ -17,13 +17,11 @@
 package uk.gov.hmrc.perftests.example
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
-import uk.gov.hmrc.perftests.example.ApplicationRequests.{getApplication, loginUsingLdap, navigateToLdapLoginPage}
+import uk.gov.hmrc.perftests.example.ApplicationRequests.{getApplication, loginUsingLdap}
 
 class ApplicationSimulation extends PerformanceTestRunner {
 
-  setup("navigate-ldap-login-page", "Navigate to LDAP login page") withRequests navigateToLdapLoginPage
-
-  setup("login-using-ldap", "Login to LDAP using csrf details") withRequests loginUsingLdap
+  setup("login-using-ldap", "Login to LDAP") withRequests loginUsingLdap
 
   setup("get-application-by-id", "Get application by id") withRequests getApplication
 

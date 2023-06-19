@@ -32,16 +32,10 @@ object ApplicationRequests extends ApiHubTestingConfiguration {
     "principal" -> "performance-tests"
   )
 
-  val navigateToLdapLoginPage: HttpRequestBuilder =
-    http("GET test-only/sign-in")
-      .get(s"$ldapLoginUrl/test-only/sign-in?continue_url=$apiHubBaseUrl")
-      .check(css("input[name=csrfToken]", "value").saveAs("csrfToken"))
-      .check(status.is(200))
-
   val loginUsingLdap: HttpRequestBuilder =
     http("POST test-only/sign-in")
       .post(s"$ldapLoginUrl/test-only/sign-in?continue_url=$apiHubBaseUrl")
-      .formParamMap(loginCredentials ++ Map("csrfToken" -> s"$${csrfToken}"))
+      .formParamMap(loginCredentials)
       .check(status.is(303))
 
   val getApplication: HttpRequestBuilder =
