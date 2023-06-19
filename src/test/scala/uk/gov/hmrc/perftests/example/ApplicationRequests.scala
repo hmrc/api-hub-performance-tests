@@ -29,7 +29,7 @@ object ApplicationRequests extends ApiHubTestingConfiguration {
   val loginCredentials: Map[String, String] = Map(
     "redirectUrl" -> apiHubBaseUrl,
     "email" -> testingConfig.ldapLogin.email,
-    "principal" -> "api-hub-performance-tests"
+    "principal" -> "performance-tests"
   )
 
   val navigateToLdapLoginPage: HttpRequestBuilder =
