@@ -23,7 +23,7 @@ trait ApiHubTestingConfiguration extends Configuration {
   def loadConfig(): ApiHubTestingConfig = {
     val appId = readRequiredProperty(s"testing.applications.appId")
     val ldapEmail = readRequiredProperty(s"testing.ldapLogin.email")
-    val apiHubBaseUrl: String = baseUrlFor("api-hub-applications")
+    val apiHubBaseUrl: String = baseUrlFor("api-hub-frontend")
     val ldapLoginUrl: String = baseUrlFor("internal-auth-frontend")
 
     ApiHubTestingConfig(apiHubBaseUrl, appId, LdapLogin(ldapLoginUrl, ldapEmail))
