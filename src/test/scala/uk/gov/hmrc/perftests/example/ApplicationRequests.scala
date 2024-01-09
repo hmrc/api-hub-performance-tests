@@ -35,7 +35,7 @@ object ApplicationRequests extends ApiHubTestingConfiguration {
     "permissions[0].actions"           -> "WRITE"
   )
 
-  val loginUsingLdap: HttpRequestBuilder    =
+  val loginUsingLdap: HttpRequestBuilder =
     http("POST test-only/sign-in")
       .post(s"$ldapLoginUrl/test-only/sign-in?continue_url=$apiHubBaseUrl")
       .formParamMap(loginCredentials)

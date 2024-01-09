@@ -21,10 +21,10 @@ import uk.gov.hmrc.performance.conf.Configuration
 trait ApiHubTestingConfiguration extends Configuration {
 
   def loadConfig(): ApiHubTestingConfig = {
-    val appId = readRequiredProperty(s"testing.applications.appId")
-    val ldapEmail = readRequiredProperty(s"testing.ldapLogin.email")
+    val appId                 = readRequiredProperty(s"testing.applications.appId")
+    val ldapEmail             = readRequiredProperty(s"testing.ldapLogin.email")
     val apiHubBaseUrl: String = baseUrlFor("api-hub-frontend")
-    val ldapLoginUrl: String = baseUrlFor("internal-auth-frontend")
+    val ldapLoginUrl: String  = baseUrlFor("internal-auth-frontend")
 
     ApiHubTestingConfig(apiHubBaseUrl, appId, LdapLogin(ldapLoginUrl, ldapEmail))
   }
@@ -47,9 +47,9 @@ trait ApiHubTestingConfiguration extends Configuration {
 
   private def baseUrlFor(serviceName: String): String = {
     val protocol = readProperty(s"services.$serviceName.protocol", "http")
-    val host = readProperty(s"services.$serviceName.host", "localhost")
-    val port = readProperty(s"services.$serviceName.port", "80")
-    val path = readProperty(s"services.$serviceName.path", "")
+    val host     = readProperty(s"services.$serviceName.host", "localhost")
+    val port     = readProperty(s"services.$serviceName.port", "80")
+    val path     = readProperty(s"services.$serviceName.path", "")
 
     urlFor(protocol, host, port, path)
   }
