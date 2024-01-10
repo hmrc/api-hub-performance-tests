@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,16 @@ import uk.gov.hmrc.perftests.example.config.{ApiHubTestingConfig, ApiHubTestingC
 
 object ApplicationRequests extends ApiHubTestingConfiguration {
   val testingConfig: ApiHubTestingConfig = loadConfig()
-  val apiHubBaseUrl: String = testingConfig.apiHubBaseUrl
-  val ldapLoginUrl: String = testingConfig.ldapLogin.baseUrl
+  val apiHubBaseUrl: String              = testingConfig.apiHubBaseUrl
+  val ldapLoginUrl: String               = testingConfig.ldapLogin.baseUrl
 
   val loginCredentials: Map[String, String] = Map(
-    "redirectUrl" -> apiHubBaseUrl,
-    "email" -> testingConfig.ldapLogin.email,
-    "principal" -> "performance-tests"
+    "redirectUrl"                      -> apiHubBaseUrl,
+    "email"                            -> testingConfig.ldapLogin.email,
+    "principal"                        -> "performance-tests",
+    "permissions[0].resourceTypes"     -> "api-hub-frontend",
+    "permissions[0].resourceLocations" -> "support",
+    "permissions[0].actions"           -> "WRITE"
   )
 
   val loginUsingLdap: HttpRequestBuilder =
@@ -38,8 +41,33 @@ object ApplicationRequests extends ApiHubTestingConfiguration {
       .formParamMap(loginCredentials)
       .check(status.is(303))
 
-  val getApplication: HttpRequestBuilder =
-    http("GET application-details")
-      .get(s"$apiHubBaseUrl/application-details/${testingConfig.appId}")
+  val getAllApplications: HttpRequestBuilder =
+    http("GET /")
+      .get(apiHubBaseUrl)
+      .check(status.is(200))
+
+  val getAllAccessRequests: HttpRequestBuilder =
+    http("GET /admin/access-requests")
+      .get(s"$apiHubBaseUrl/admin/access-requests")
+      .check(status.is(200))
+
+  val getApplicationDetails: HttpRequestBuilder =
+    http("GET application/details")
+      .get(s"$apiHubBaseUrl/application/details/${testingConfig.appId}")
+      .check(status.is(200))
+
+  val getApplicationApis: HttpRequestBuilder =
+    http("GET /application/apis")
+      .get(s"$apiHubBaseUrl/application/apis/${testingConfig.appId}")
+      .check(status.is(200))
+
+  val getDevelopmentEnvironmentAndCredentials: HttpRequestBuilder =
+    http("GET application/environment-and-credentials/{app_id}#hip-development")
+      .get(s"$apiHubBaseUrl/application/environment-and-credentials/${testingConfig.appId}#hip-development")
+      .check(status.is(200))
+
+  val getProductionEnvironmentAndCredentials: HttpRequestBuilder =
+    http("GET application/environment-and-credentials/{app_id}#hip-production")
+      .get(s"$apiHubBaseUrl/application/environment-and-credentials/${testingConfig.appId}#hip-production")
       .check(status.is(200))
 }
